@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MutantService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExamenMercado</a> &gt; <a href="index.source.html" class="el_package">org.example.service</a> &gt; <span class="el_source">MutantService.java</span></div><h1>MutantService.java</h1><pre class="source lang-java linenums">package org.example.service;
+
+import org.example.service.MutantDetector;
+import org.example.dto.StatsResponse;
+import org.example.entity.DnaRecord;
+import org.example.repository.DnaRecordRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.security.MessageDigest;
+import java.util.HexFormat;
+
+@Service
+public class MutantService {
+
+    private final DnaRecordRepository repository;
+    private final MutantDetector detector;
+
+<span class="nc" id="L19">    public MutantService(DnaRecordRepository repository, MutantDetector detector) {</span>
+<span class="nc" id="L20">        this.repository = repository;</span>
+<span class="nc" id="L21">        this.detector = detector;</span>
+<span class="nc" id="L22">    }</span>
+
+    private String hash(String[] dna) {
+        try {
+<span class="nc" id="L26">            MessageDigest md = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
+<span class="nc" id="L27">            return HexFormat.of().formatHex(md.digest(String.join(&quot;&quot;, dna).getBytes()));</span>
+<span class="nc" id="L28">        } catch (Exception e) {</span>
+<span class="nc" id="L29">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    @Transactional
+    public boolean analyze(String[] dna) {
+<span class="nc" id="L35">        String key = hash(dna);</span>
+<span class="nc" id="L36">        return repository.findByDnaHash(key)</span>
+<span class="nc" id="L37">                .map(DnaRecord::isMutant)</span>
+<span class="nc" id="L38">                .orElseGet(() -&gt; {</span>
+<span class="nc" id="L39">                    boolean mutant = detector.isMutant(dna);</span>
+<span class="nc" id="L40">                    repository.save(new DnaRecord(key, mutant));</span>
+<span class="nc" id="L41">                    return mutant;</span>
+                });
+    }
+
+    public StatsResponse getStats() {
+<span class="nc" id="L46">        long m = repository.countByIsMutant(true);</span>
+<span class="nc" id="L47">        long h = repository.countByIsMutant(false);</span>
+<span class="nc bnc" id="L48" title="All 4 branches missed.">        double ratio = h == 0 ? (m == 0 ? 0.0 : 1.0) : (double) m / h;</span>
+<span class="nc" id="L49">        return new StatsResponse(m, h, ratio);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
