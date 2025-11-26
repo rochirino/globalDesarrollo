@@ -1,4 +1,5 @@
 # 🧬 Mutant DNA Detector API
+Link Render:https://globaldesarrollo-1.onrender.com
 
 API REST para detección de mutantes mediante análisis de secuencias de ADN.  
 Implementado con **Spring Boot**, **Gradle**, **Java 17** y **H2**, siguiendo arquitectura en capas.
@@ -15,7 +16,6 @@ Un humano es considerado mutante si contiene **al menos dos secuencias** de **cu
 - Vertical
 - Diagonal
 
-El sistema cumple con los 3 niveles solicitados en la consigna:
 
 ### **1️⃣ Algoritmo de Detección (`isMutant`)**
 Analiza la matriz de ADN para encontrar patrones repetidos de forma eficiente.
@@ -67,15 +67,11 @@ bash
 Copiar código
 ./gradlew bootRun
 La API estará disponible en:
-
-arduino
-Copiar código
 http://localhost:8080
 🌐 Endpoints
 1️⃣ POST /mutant
 Body (JSON):
 json
-Copiar código
 {
   "dna": ["ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"]
 }
@@ -87,23 +83,12 @@ Respuestas:
 2️⃣ GET /stats
 Respuesta (JSON):
 json
-Copiar código
 {
   "count_mutant_dna": 40,
   "count_human_dna": 100,
   "ratio": 0.4
 }
-🧠 Diseño de la Solución
-✔ Arquitectura por Capas
-Controller: manejo de solicitudes HTTP
 
-Service: lógica de negocio
-
-Detector: algoritmo de detección
-
-Repository: persistencia con JPA
-
-Entity: mapeo de datos
 
 📈 Diagrama de Secuencia 
 
@@ -118,3 +103,4 @@ Legajo:	50847
 Carrera:	Ingeniería de Sistemas
 Materia:	Desarrollo de Software
 Año:	3er Año
+
