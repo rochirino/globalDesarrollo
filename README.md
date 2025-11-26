@@ -21,7 +21,6 @@ Un humano es considerado mutante si contiene **al menos dos secuencias** de **cu
 Analiza la matriz de ADN para encontrar patrones repetidos de forma eficiente.
 
 ### **2️⃣ API REST**
-Endpoints solicitados:
 
 - **POST `/mutant`**
 - **GET `/stats`**
@@ -103,4 +102,5 @@ Legajo:	50847
 Carrera:	Ingeniería de Sistemas
 Materia:	Desarrollo de Software
 Año:	3er Año
+
 
