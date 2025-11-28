@@ -1,41 +1,35 @@
 package org.example.validation;
 
+
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.example.dto.DnaRequest;
 
-public class DnaValidator implements ConstraintValidator<ValidDna, Object> {
+public class DnaValidator implements ConstraintValidator<ValidDna, String[]> {
 
     @Override
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
-        String[] dna;
-        if (value instanceof DnaRequest) {
-            dna = ((DnaRequest) value).getDna();
-        } else if (value instanceof String[]) {
-            dna = (String[]) value;
-        } else {
-            return false;
-        }
+    public boolean isValid(String[] dna, ConstraintValidatorContext context) {
 
-        if (dna == null || dna.length == 0) {
+        if (dna == null || dna.length == 0)
             return false;
-        }
 
         int n = dna.length;
-        if (n < 4) return false;
 
         for (String row : dna) {
             if (row == null || row.length() != n) {
                 context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate("debe ser NxN").addConstraintViolation();
+                context.buildConstraintViolationWithTemplate("La matriz debe ser NxN")
+                        .addConstraintViolation();
                 return false;
             }
+
             if (!row.matches("[ATCG]+")) {
                 context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate("solo A,T,C,G").addConstraintViolation();
+                context.buildConstraintViolationWithTemplate("Solo se permiten caracteres A,T,C,G")
+                        .addConstraintViolation();
                 return false;
             }
         }
+
         return true;
     }
 }

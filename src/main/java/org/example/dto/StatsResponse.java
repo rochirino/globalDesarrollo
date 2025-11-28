@@ -1,8 +1,21 @@
 package org.example.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Schema(description = "Estadísticas del análisis de ADN")
 public class StatsResponse {
+
+    @Schema(description = "Cantidad de ADN mutante detectado", example = "40")
     private long count_mutant_dna;
+
+    @Schema(description = "Cantidad de ADN humano detectado", example = "100")
     private long count_human_dna;
+
+    @Schema(description = "Proporción entre mutantes y humanos", example = "0.4")
     private double ratio;
 
     public StatsResponse() {}
@@ -12,12 +25,4 @@ public class StatsResponse {
         this.count_human_dna = count_human_dna;
         this.ratio = ratio;
     }
-
-    public long getCount_mutant_dna() { return count_mutant_dna; }
-    public long getCount_human_dna() { return count_human_dna; }
-    public double getRatio() { return ratio; }
-
-    public void setCount_mutant_dna(long c) { this.count_mutant_dna = c; }
-    public void setCount_human_dna(long c) { this.count_human_dna = c; }
-    public void setRatio(double r) { this.ratio = r; }
 }

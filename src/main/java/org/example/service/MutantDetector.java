@@ -1,42 +1,65 @@
 package org.example.service;
 
+import org.example.validation.DnaValidator;
 import org.springframework.stereotype.Component;
 @Component
+
+
+
+
 public class MutantDetector {
 
+    private static final int SEQ = 4;
+
     public boolean isMutant(String[] dna) {
-        if (dna == null || dna.length == 0) return false;
+
         int n = dna.length;
-        char[][] matrix = new char[n][n];
+        char[][] m = new char[n][n];
+
         for (int i = 0; i < n; i++) {
-            String row = dna[i];
+            m[i] = dna[i].toCharArray();
+        }
+
+        int found = 0;
+
+        for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                matrix[i][j] = row.charAt(j);
+
+                char base = m[i][j];
+
+                // Horizontal →
+                if (j <= n - SEQ && check(m, i, j, 0, 1, base)) {
+                    if (++found == 2) return true;
+                }
+
+                // Vertical ↓
+                if (i <= n - SEQ && check(m, i, j, 1, 0, base)) {
+                    if (++found == 2) return true;
+                }
+
+                // Diagonal ↘
+                if (i <= n - SEQ && j <= n - SEQ && check(m, i, j, 1, 1, base)) {
+                    if (++found == 2) return true;
+                }
+
+                // Diagonal ↗
+                if (i >= SEQ - 1 && j <= n - SEQ && check(m, i, j, -1, 1, base)) {
+                    if (++found == 2) return true;
+                }
             }
         }
 
-        int sequences = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (checkDirection(matrix, i, j, n, 0, 1)) sequences++;
-                if (checkDirection(matrix, i, j, n, 1, 0)) sequences++;
-                if (checkDirection(matrix, i, j, n, 1, 1)) sequences++;
-                if (checkDirection(matrix, i, j, n, -1, 1)) sequences++;
-                if (sequences >= 2) return true;
-            }
-        }
         return false;
     }
 
-    private boolean checkDirection(char[][] m, int i, int j, int n, int di, int dj) {
-        char base = m[i][j];
-        int len = 1;
-        int ii = i + di, jj = j + dj;
-        while (ii >= 0 && ii < n && jj >= 0 && jj < n && m[ii][jj] == base) {
-            len++;
-            if (len == 4) return true;
-            ii += di; jj += dj;
+    private boolean check(char[][] m, int r, int c, int dr, int dc, char base) {
+
+        for (int k = 1; k < SEQ; k++) {
+            if (m[r + k * dr][c + k * dc] != base) {
+                return false;
+            }
         }
-        return false;
+
+        return true;
     }
 }

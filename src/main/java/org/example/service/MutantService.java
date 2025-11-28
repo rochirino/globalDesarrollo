@@ -7,6 +7,7 @@ import org.example.repository.DnaRecordRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.HexFormat;
 
@@ -21,31 +22,43 @@ public class MutantService {
         this.detector = detector;
     }
 
-    private String hash(String[] dna) {
+    private String sha256(String[] dna) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            return HexFormat.of().formatHex(md.digest(String.join("", dna).getBytes()));
+            String joined = String.join("|", dna); // separador para evitar colisiones simples
+            byte[] digest = md.digest(joined.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(digest);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error hashing DNA", e);
         }
     }
 
+    /**
+     * Si ya existe el hash en BD, devuelve el resultado almacenado.
+     * Si no existe, calcula con MutantDetector, guarda y devuelve.
+     */
     @Transactional
     public boolean analyze(String[] dna) {
-        String key = hash(dna);
+        String key = sha256(dna);
         return repository.findByDnaHash(key)
                 .map(DnaRecord::isMutant)
                 .orElseGet(() -> {
                     boolean mutant = detector.isMutant(dna);
-                    repository.save(new DnaRecord(key, mutant));
+                    DnaRecord rec = new DnaRecord(key, mutant);
+                    repository.save(rec);
                     return mutant;
                 });
     }
 
     public StatsResponse getStats() {
-        long m = repository.countByIsMutant(true);
-        long h = repository.countByIsMutant(false);
-        double ratio = h == 0 ? (m == 0 ? 0.0 : 1.0) : (double) m / h;
-        return new StatsResponse(m, h, ratio);
+        long countMutant = repository.countByIsMutant(true);
+        long countHuman = repository.countByIsMutant(false);
+        double ratio;
+        if (countHuman == 0) {
+            ratio = countMutant == 0 ? 0.0 : 1.0;
+        } else {
+            ratio = (double) countMutant / countHuman;
+        }
+        return new StatsResponse(countMutant, countHuman, ratio);
     }
 }

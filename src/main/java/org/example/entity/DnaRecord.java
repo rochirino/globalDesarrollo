@@ -3,7 +3,13 @@ package org.example.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
+
+@Setter
+@Getter
 @Entity
 @Table(name = "dna_record")
 public class DnaRecord {
@@ -18,18 +24,19 @@ public class DnaRecord {
     @Column(name = "is_mutant")
     private boolean isMutant;
 
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
     public DnaRecord() {}
 
     public DnaRecord(String dnaHash, boolean isMutant) {
         this.dnaHash = dnaHash;
         this.isMutant = isMutant;
+        this.createdAt = LocalDateTime.now();
     }
 
-    public Long getId() { return id; }
-    public String getDnaHash() { return dnaHash; }
+
     public boolean isMutant() { return isMutant; }
 
-    public void setId(Long id) { this.id = id; }
-    public void setDnaHash(String dnaHash) { this.dnaHash = dnaHash; }
-    public void setMutant(boolean mutant) { isMutant = mutant; }
+
 }
