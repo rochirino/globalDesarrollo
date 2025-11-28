@@ -113,10 +113,10 @@ class MutantDetectorTest {
     public void testHumanNoSequences() {
         String[] dna = {
                 "ATGCGA",
-                "CAGTGC",
-                "TTATGT",
-                "AGAAGC",
-                "CCCTTA",
+                "CAGTAC",
+                "TTGTGT",
+                "AGAACC",
+                "CCTATA",
                 "TCACTG"
         };
         assertFalse(detector.isMutant(dna));

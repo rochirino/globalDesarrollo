@@ -2,64 +2,92 @@ package org.example.service;
 
 import org.example.validation.DnaValidator;
 import org.springframework.stereotype.Component;
+
+
 @Component
-
-
-
-
 public class MutantDetector {
-
-    private static final int SEQ = 4;
 
     public boolean isMutant(String[] dna) {
 
-        int n = dna.length;
-        char[][] m = new char[n][n];
+        if (dna == null || dna.length == 0)
+            throw new IllegalArgumentException("DNA vacío");
 
-        for (int i = 0; i < n; i++) {
-            m[i] = dna[i].toCharArray();
+        int n = dna.length;
+
+        // Debe ser NxN y mínimo 4x4
+        if (n < 4)
+            throw new IllegalArgumentException("La matriz debe ser NxN y de tamaño mínimo 4");
+
+        for (String row : dna) {
+            if (row.length() != n)
+                throw new IllegalArgumentException("La matriz debe ser NxN");
+
+            if (!row.matches("[ATCG]+"))
+                throw new IllegalArgumentException("Caracter inválido");
         }
 
-        int found = 0;
+        char[][] m = toMatrix(dna);
 
+        // Si encuentra 1 secuencia → mutante (como piden tus tests)
+        return hasHorizontal(m, n)
+                || hasVertical(m, n)
+                || hasDiagonal(m, n)
+                || hasReverseDiagonal(m, n);
+    }
+
+    // -----------------------------
+    //   METODOS DE DETECCION
+    // -----------------------------
+
+    private boolean hasHorizontal(char[][] m, int n) {
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-
-                char base = m[i][j];
-
-                // Horizontal →
-                if (j <= n - SEQ && check(m, i, j, 0, 1, base)) {
-                    if (++found == 2) return true;
-                }
-
-                // Vertical ↓
-                if (i <= n - SEQ && check(m, i, j, 1, 0, base)) {
-                    if (++found == 2) return true;
-                }
-
-                // Diagonal ↘
-                if (i <= n - SEQ && j <= n - SEQ && check(m, i, j, 1, 1, base)) {
-                    if (++found == 2) return true;
-                }
-
-                // Diagonal ↗
-                if (i >= SEQ - 1 && j <= n - SEQ && check(m, i, j, -1, 1, base)) {
-                    if (++found == 2) return true;
-                }
+            for (int j = 0; j <= n - 4; j++) {
+                char c = m[i][j];
+                if (c == m[i][j+1] && c == m[i][j+2] && c == m[i][j+3])
+                    return true;
             }
         }
-
         return false;
     }
 
-    private boolean check(char[][] m, int r, int c, int dr, int dc, char base) {
-
-        for (int k = 1; k < SEQ; k++) {
-            if (m[r + k * dr][c + k * dc] != base) {
-                return false;
+    private boolean hasVertical(char[][] m, int n) {
+        for (int i = 0; i <= n - 4; i++) {
+            for (int j = 0; j < n; j++) {
+                char c = m[i][j];
+                if (c == m[i+1][j] && c == m[i+2][j] && c == m[i+3][j])
+                    return true;
             }
         }
+        return false;
+    }
 
-        return true;
+    private boolean hasDiagonal(char[][] m, int n) {
+        for (int i = 0; i <= n - 4; i++) {
+            for (int j = 0; j <= n - 4; j++) {
+                char c = m[i][j];
+                if (c == m[i+1][j+1] && c == m[i+2][j+2] && c == m[i+3][j+3])
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasReverseDiagonal(char[][] m, int n) {
+        for (int i = 0; i <= n - 4; i++) {
+            for (int j = 3; j < n; j++) {
+                char c = m[i][j];
+                if (c == m[i+1][j-1] && c == m[i+2][j-2] && c == m[i+3][j-3])
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private char[][] toMatrix(String[] dna) {
+        int n = dna.length;
+        char[][] m = new char[n][n];
+        for (int i = 0; i < n; i++)
+            m[i] = dna[i].toCharArray();
+        return m;
     }
 }
