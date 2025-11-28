@@ -30,7 +30,6 @@ EXPOSE 8080
 # Copiamos el JAR generado.
 # TRUCO: Usamos "*.jar" para no depender del nombre exacto "Mutantes-1.0..."
 # Así, si cambia la versión en build.gradle, esto sigue funcionando.
-COPY --from=build /app/build/libs/mutant-detector-0.0.1-SNAPSHOT.jar app.jar
-
+COPY --from=build /app/build/libs/*.jar app.jar
 # Comando de arranque
 ENTRYPOINT ["java", "-jar", "/app.jar"]
