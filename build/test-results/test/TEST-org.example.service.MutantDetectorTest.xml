@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.example.service.MutantDetectorTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2025-11-28T18:34:53.039Z" hostname="DESKTOP-5VFVHKD" time="0.107">
+<testsuite name="org.example.service.MutantDetectorTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-28T19:40:33.809Z" hostname="DESKTOP-5VFVHKD" time="0.046">
   <properties/>
-  <testcase name="throwsErrorForInvalidCharacters()" classname="org.example.service.MutantDetectorTest" time="0.042"/>
-  <testcase name="detectsDiagonalMainMutant()" classname="org.example.service.MutantDetectorTest" time="0.004"/>
-  <testcase name="throwsErrorForNonSquareMatrix()" classname="org.example.service.MutantDetectorTest" time="0.003"/>
-  <testcase name="Humano sin ninguna secuencia de 4 letras" classname="org.example.service.MutantDetectorTest" time="0.005"/>
-  <testcase name="Mutante con secuencia diagonal" classname="org.example.service.MutantDetectorTest" time="0.004"/>
-  <testcase name="throwsErrorForSmallMatrix()" classname="org.example.service.MutantDetectorTest" time="0.003"/>
-  <testcase name="returnsFalseForHuman()" classname="org.example.service.MutantDetectorTest" time="0.002"/>
-  <testcase name="ADN inválido por ser menor a 4x4" classname="org.example.service.MutantDetectorTest" time="0.004"/>
-  <testcase name="detectsDiagonalReverseMutant()" classname="org.example.service.MutantDetectorTest" time="0.003"/>
-  <testcase name="detectsHorizontalMutant()" classname="org.example.service.MutantDetectorTest" time="0.002"/>
-  <testcase name="detectsVerticalMutant()" classname="org.example.service.MutantDetectorTest" time="0.002"/>
+  <testcase name="Debe ser HUMANO: Solo tiene UNA secuencia de 4 letras (Caso Borde)" classname="org.example.service.MutantDetectorTest" time="0.046"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

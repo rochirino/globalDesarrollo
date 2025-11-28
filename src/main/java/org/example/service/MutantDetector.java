@@ -4,90 +4,84 @@ import org.example.validation.DnaValidator;
 import org.springframework.stereotype.Component;
 
 
+
 @Component
 public class MutantDetector {
 
+    // Constante para la cantidad de letras iguales consecutivas
+    private static final int SEQUENCE_LENGTH = 4;
+
     public boolean isMutant(String[] dna) {
-
-        if (dna == null || dna.length == 0)
-            throw new IllegalArgumentException("DNA vacío");
-
+        // 1. Validaciones básicas
+        if (dna == null || dna.length == 0) throw new IllegalArgumentException("DNA vacío");
         int n = dna.length;
+        if (n < SEQUENCE_LENGTH) throw new IllegalArgumentException("Tamaño de matriz insuficiente (Mínimo 4x4)");
 
-        // Debe ser NxN y mínimo 4x4
-        if (n < 4)
-            throw new IllegalArgumentException("La matriz debe ser NxN y de tamaño mínimo 4");
-
-        for (String row : dna) {
-            if (row.length() != n)
-                throw new IllegalArgumentException("La matriz debe ser NxN");
-
-            if (!row.matches("[ATCG]+"))
-                throw new IllegalArgumentException("Caracter inválido");
-        }
-
-        char[][] m = toMatrix(dna);
-
-        // Si encuentra 1 secuencia → mutante (como piden tus tests)
-        return hasHorizontal(m, n)
-                || hasVertical(m, n)
-                || hasDiagonal(m, n)
-                || hasReverseDiagonal(m, n);
-    }
-
-    // -----------------------------
-    //   METODOS DE DETECCION
-    // -----------------------------
-
-    private boolean hasHorizontal(char[][] m, int n) {
+        // Convertimos a matriz de caracteres para acceso rápido
+        char[][] matrix = new char[n][n];
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j <= n - 4; j++) {
-                char c = m[i][j];
-                if (c == m[i][j+1] && c == m[i][j+2] && c == m[i][j+3])
-                    return true;
-            }
+            if (dna[i].length() != n) throw new IllegalArgumentException("La matriz debe ser cuadrada (NxN)");
+            // Validación de caracteres permitidos con Regex rápido
+            if (!dna[i].matches("[ATCG]+")) throw new IllegalArgumentException("Caracteres inválidos (Solo A, T, C, G)");
+            matrix[i] = dna[i].toCharArray();
         }
-        return false;
-    }
 
-    private boolean hasVertical(char[][] m, int n) {
-        for (int i = 0; i <= n - 4; i++) {
+        // 2. Conteo de secuencias
+        int sequencesFound = 0;
+
+        // Recorremos la matriz UNA sola vez (Optimización)
+        for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                char c = m[i][j];
-                if (c == m[i+1][j] && c == m[i+2][j] && c == m[i+3][j])
-                    return true;
+
+                // Solo buscamos si hay espacio suficiente en cada dirección para evitar IndexOutOfBounds
+
+                // Horizontal (Hacia la derecha)
+                if (j <= n - SEQUENCE_LENGTH) {
+                    if (checkDirection(matrix, i, j, 0, 1)) {
+                        sequencesFound++;
+                        if (sequencesFound > 1) return true; // Early Termination (Optimización del profesor)
+                    }
+                }
+
+                // Vertical (Hacia abajo)
+                if (i <= n - SEQUENCE_LENGTH) {
+                    if (checkDirection(matrix, i, j, 1, 0)) {
+                        sequencesFound++;
+                        if (sequencesFound > 1) return true;
+                    }
+                }
+
+                // Diagonal (Abajo-Derecha)
+                if (i <= n - SEQUENCE_LENGTH && j <= n - SEQUENCE_LENGTH) {
+                    if (checkDirection(matrix, i, j, 1, 1)) {
+                        sequencesFound++;
+                        if (sequencesFound > 1) return true;
+                    }
+                }
+
+                // Diagonal Inversa (Abajo-Izquierda)
+                if (i <= n - SEQUENCE_LENGTH && j >= SEQUENCE_LENGTH - 1) {
+                    if (checkDirection(matrix, i, j, 1, -1)) {
+                        sequencesFound++;
+                        if (sequencesFound > 1) return true;
+                    }
+                }
             }
         }
-        return false;
+
+        return false; // Si terminamos y encontramos 0 o 1 secuencia, es Humano.
     }
 
-    private boolean hasDiagonal(char[][] m, int n) {
-        for (int i = 0; i <= n - 4; i++) {
-            for (int j = 0; j <= n - 4; j++) {
-                char c = m[i][j];
-                if (c == m[i+1][j+1] && c == m[i+2][j+2] && c == m[i+3][j+3])
-                    return true;
+    /**
+     * Verifica si hay 4 letras iguales consecutivas desde (row, col) en la dirección (deltaRow, deltaCol)
+     */
+    private boolean checkDirection(char[][] matrix, int row, int col, int deltaRow, int deltaCol) {
+        char first = matrix[row][col];
+        for (int k = 1; k < SEQUENCE_LENGTH; k++) {
+            if (matrix[row + k * deltaRow][col + k * deltaCol] != first) {
+                return false;
             }
         }
-        return false;
-    }
-
-    private boolean hasReverseDiagonal(char[][] m, int n) {
-        for (int i = 0; i <= n - 4; i++) {
-            for (int j = 3; j < n; j++) {
-                char c = m[i][j];
-                if (c == m[i+1][j-1] && c == m[i+2][j-2] && c == m[i+3][j-3])
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    private char[][] toMatrix(String[] dna) {
-        int n = dna.length;
-        char[][] m = new char[n][n];
-        for (int i = 0; i < n; i++)
-            m[i] = dna[i].toCharArray();
-        return m;
+        return true;
     }
 }

@@ -18,7 +18,7 @@ public class StatsResponse {
     @Schema(description = "Proporción entre mutantes y humanos", example = "0.4")
     private double ratio;
 
-    public StatsResponse() {}
+
 
     public StatsResponse(long count_mutant_dna, long count_human_dna, double ratio) {
         this.count_mutant_dna = count_mutant_dna;

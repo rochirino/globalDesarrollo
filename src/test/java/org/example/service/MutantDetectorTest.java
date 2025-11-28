@@ -122,6 +122,17 @@ class MutantDetectorTest {
         assertFalse(detector.isMutant(dna));
     }
     @Test
+    @DisplayName("Debe ser HUMANO: Solo tiene UNA secuencia de 4 letras (Caso Borde)")
+    void returnsFalseForHumanWithSingleSequence() {
+        String[] dna = {
+                "AAAA",
+                "TCAG",
+                "AGTC",
+                "CGTA"
+        };
+        assertFalse(detector.isMutant(dna), "Debe ser falso si solo hay 1 secuencia");
+    }
+    @Test
     @DisplayName("ADN inválido por ser menor a 4x4")
     public void testInvalidSmallMatrix() {
         String[] dna = {"ATG", "CAG", "TTA"};

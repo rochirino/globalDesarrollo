@@ -3,14 +3,15 @@ package org.example.entity;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
 @Entity
+@Getter @Setter // Lombok
+@NoArgsConstructor // Lombok
+@AllArgsConstructor // Lombok
+@Builder // Lombok (Patron Builder, opcional pero recomendado)
 @Table(name = "dna_record")
 public class DnaRecord {
 
@@ -27,7 +28,7 @@ public class DnaRecord {
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public DnaRecord() {}
+
 
     public DnaRecord(String dnaHash, boolean isMutant) {
         this.dnaHash = dnaHash;
