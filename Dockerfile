@@ -32,4 +32,4 @@ EXPOSE 8080
 # Así, si cambia la versión en build.gradle, esto sigue funcionando.
 COPY --from=build /app/build/libs/*.jar app.jar
 # Comando de arranque
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
