@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.example.service.MutantDetectorTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-28T19:40:33.809Z" hostname="DESKTOP-5VFVHKD" time="0.046">
+<testsuite name="org.example.service.MutantDetectorTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-29T00:15:35.222Z" hostname="DESKTOP-5VFVHKD" time="0.08">
   <properties/>
-  <testcase name="Debe ser HUMANO: Solo tiene UNA secuencia de 4 letras (Caso Borde)" classname="org.example.service.MutantDetectorTest" time="0.046"/>
+  <testcase name="Debe ser HUMANO: Solo tiene UNA secuencia de 4 letras (Caso Borde)" classname="org.example.service.MutantDetectorTest" time="0.08"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
