@@ -72,7 +72,7 @@ sequenceDiagram
         end
     end
     deactivate Controller
- ` ``` `
+ ` ``
 
 
 ## 📌 Descripción del Proyecto
@@ -178,6 +178,7 @@ Legajo:	50847
 Carrera:	Ingeniería de Sistemas
 Materia:	Desarrollo de Software
 Año:	3er Año
+
 
 
 
