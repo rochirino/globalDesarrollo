@@ -9,6 +9,7 @@ Implementado con **Spring Boot**, **Gradle**, **Java 17** y **H2**, siguiendo ar
 
 Este diagrama muestra cómo interactúan los componentes del sistema para procesar una solicitud de análisis de ADN:
 
+```mermaid
 sequenceDiagram
     autonumber
     actor Cliente
@@ -70,7 +71,7 @@ sequenceDiagram
             Controller-->>Cliente: 403 Forbidden
         end
     end
-        deactivate Controller
+    deactivate Controller
 
 ## 📌 Descripción del Proyecto
 
@@ -175,6 +176,7 @@ Legajo:	50847
 Carrera:	Ingeniería de Sistemas
 Materia:	Desarrollo de Software
 Año:	3er Año
+
 
 
 
