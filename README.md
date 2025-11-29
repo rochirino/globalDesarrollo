@@ -5,6 +5,75 @@ API REST para detección de mutantes mediante análisis de secuencias de ADN.
 Implementado con **Spring Boot**, **Gradle**, **Java 17** y **H2**, siguiendo arquitectura en capas.
 
 ---
+## Diagrama de Secuencia
+
+Este diagrama muestra cómo interactúan los componentes del sistema para procesar una solicitud de análisis de ADN:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Cliente
+    participant Controller as MutantController
+    participant Service as MutantService
+    participant Repo as DnaRecordRepository
+    participant DB as H2 Database
+    participant Detector as MutantDetector
+
+    Note over Cliente, Controller: Inicio de la Petición
+    Cliente->>Controller: POST /mutant { "dna": [...] }
+    
+    activate Controller
+    Controller->>Controller: Validar Input (@Valid)
+    
+    alt Input Inválido
+        Controller-->>Cliente: 400 Bad Request
+    else Input Válido
+        Controller->>Service: analyze(dna)
+        activate Service
+        
+        Note right of Service: Optimización: Verificar si ya fue analizado
+        Service->>Service: Calcular Hash SHA-256 (dna)
+        Service->>Repo: findByDnaHash(hash)
+        activate Repo
+        Repo->>DB: SELECT * FROM dna_record WHERE hash = ?
+        activate DB
+        DB-->>Repo: Resultado (Encontrado o Vacío)
+        deactivate DB
+        Repo-->>Service: Optional<DnaRecord>
+        deactivate Repo
+
+        alt ADN Ya Analizado (Cache Hit)
+            Note right of Service: Se recupera resultado de BD (Ahorra CPU)
+            Service-->>Service: Obtener isMutant del registro
+        else ADN Nuevo (Cache Miss)
+            Note right of Service: Se ejecuta algoritmo de detección
+            Service->>Detector: isMutant(dna)
+            activate Detector
+            Detector-->>Service: boolean result
+            deactivate Detector
+            
+            Service->>Repo: save(new DnaRecord)
+            activate Repo
+            Repo->>DB: INSERT INTO dna_record ...
+            activate DB
+            DB-->>Repo: Confirmación
+            deactivate DB
+            Repo-->>Service: Registro Guardado
+            deactivate Repo
+        end
+
+        Service-->>Controller: boolean isMutant
+        deactivate Service
+
+        alt es Mutante (true)
+            Controller-->>Cliente: 200 OK
+        else es Humano (false)
+            Controller-->>Cliente: 403 Forbidden
+        end
+    end
+    deactivate Controller
+ ` ``` `
+
 
 ## 📌 Descripción del Proyecto
 
@@ -99,70 +168,7 @@ json
 
 Este diagrama muestra cómo interactúan los componentes del sistema para procesar una solicitud de análisis de ADN:
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Cliente
-    participant Controller as MutantController
-    participant Service as MutantService
-    participant Repo as DnaRecordRepository
-    participant DB as H2 Database
-    participant Detector as MutantDetector
 
-    Note over Cliente, Controller: Inicio de la Petición
-    Cliente->>Controller: POST /mutant { "dna": [...] }
-    
-    activate Controller
-    Controller->>Controller: Validar Input (@Valid)
-    
-    alt Input Inválido
-        Controller-->>Cliente: 400 Bad Request
-    else Input Válido
-        Controller->>Service: analyze(dna)
-        activate Service
-        
-        Note right of Service: Optimización: Verificar si ya fue analizado
-        Service->>Service: Calcular Hash SHA-256 (dna)
-        Service->>Repo: findByDnaHash(hash)
-        activate Repo
-        Repo->>DB: SELECT * FROM dna_record WHERE hash = ?
-        activate DB
-        DB-->>Repo: Resultado (Encontrado o Vacío)
-        deactivate DB
-        Repo-->>Service: Optional<DnaRecord>
-        deactivate Repo
-
-        alt ADN Ya Analizado (Cache Hit)
-            Note right of Service: Se recupera resultado de BD (Ahorra CPU)
-            Service-->>Service: Obtener isMutant del registro
-        else ADN Nuevo (Cache Miss)
-            Note right of Service: Se ejecuta algoritmo de detección
-            Service->>Detector: isMutant(dna)
-            activate Detector
-            Detector-->>Service: boolean result
-            deactivate Detector
-            
-            Service->>Repo: save(new DnaRecord)
-            activate Repo
-            Repo->>DB: INSERT INTO dna_record ...
-            activate DB
-            DB-->>Repo: Confirmación
-            deactivate DB
-            Repo-->>Service: Registro Guardado
-            deactivate Repo
-        end
-
-        Service-->>Controller: boolean isMutant
-        deactivate Service
-
-        alt es Mutante (true)
-            Controller-->>Cliente: 200 OK
-        else es Humano (false)
-            Controller-->>Cliente: 403 Forbidden
-        end
-    end
-    deactivate Controller
- ` ``` `
 
 
 👤 Información del Desarrollador
@@ -172,6 +178,7 @@ Legajo:	50847
 Carrera:	Ingeniería de Sistemas
 Materia:	Desarrollo de Software
 Año:	3er Año
+
 
 
 
