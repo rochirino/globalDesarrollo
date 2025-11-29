@@ -71,6 +71,7 @@ sequenceDiagram
         end
     end
     deactivate Controller
+    
 
 📌 Descripción del Proyecto
 
@@ -170,6 +171,7 @@ Carrera: Ingeniería de Sistemas
 Materia: Desarrollo de Software
 
 Año: 3er Año
+
 
 
 
