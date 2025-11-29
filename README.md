@@ -95,6 +95,11 @@ json
 ![diagrama de secuencia mutantes.png](..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2FDownloads%2Fdiagrama%20de%20secuencia%20mutantes.png)
 
 
+## Diagrama de Secuencia
+
+Este diagrama muestra cómo interactúan los componentes del sistema para procesar una solicitud de análisis de ADN:
+
+```mermaid
 sequenceDiagram
     autonumber
     actor Cliente
@@ -166,6 +171,7 @@ Legajo:	50847
 Carrera:	Ingeniería de Sistemas
 Materia:	Desarrollo de Software
 Año:	3er Año
+
 
 
 
