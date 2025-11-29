@@ -15,7 +15,8 @@ public class MutantDetector {
         // 1. Validaciones básicas
         if (dna == null || dna.length == 0) throw new IllegalArgumentException("DNA vacío");
         int n = dna.length;
-        if (n < SEQUENCE_LENGTH) throw new IllegalArgumentException("Tamaño de matriz insuficiente (Mínimo 4x4)");
+        if (n < SEQUENCE_LENGTH) throw new IllegalArgumentException("La matriz debe ser NxN y de tamaño mínimo 4");
+
 
         // Convertimos a matriz de caracteres para acceso rápido
         char[][] matrix = new char[n][n];

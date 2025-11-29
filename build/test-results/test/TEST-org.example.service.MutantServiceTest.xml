@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.example.service.MutantServiceTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-11-29T18:19:00.377Z" hostname="DESKTOP-5VFVHKD" time="0.371">
+  <properties/>
+  <testcase name="usesDatabaseCacheWhenExists()" classname="org.example.service.MutantServiceTest" time="0.291"/>
+  <testcase name="ratioIsOneWhenNoHumans()" classname="org.example.service.MutantServiceTest" time="0.025"/>
+  <testcase name="savesResultWhenNotInDatabase()" classname="org.example.service.MutantServiceTest" time="0.021"/>
+  <testcase name="computesStatsCorrectly()" classname="org.example.service.MutantServiceTest" time="0.004"/>
+  <testcase name="ratioIsZeroWhenOnlyHumans()" classname="org.example.service.MutantServiceTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (C:\Users\MI EQUIPO\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.14.10\90ed94ac044ea8953b224304c762316e91fd6b31\byte-buddy-agent-1.14.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>

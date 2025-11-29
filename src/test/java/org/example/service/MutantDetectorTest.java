@@ -13,11 +13,23 @@ class MutantDetectorTest {
     void detectsHorizontalMutant() {
         String[] dna = {
                 "AAAA",
-                "TGCT",
+                "TTTT",
                 "CAGT",
                 "TTCG"
         };
         assertTrue(detector.isMutant(dna));
+    }
+
+    @Test
+    void detectsHorizontal() {
+        String[] dna = {
+                "AAAA",
+                "TGCT",
+                "CAGT",
+                "TTCG"
+        };
+        // Solo hay UNA secuencia → NO es mutante
+        assertFalse(detector.isMutant(dna));
     }
 
     @Test
