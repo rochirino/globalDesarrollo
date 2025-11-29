@@ -9,9 +9,9 @@ Diagrama de Secuencia
 
 Este diagrama muestra cómo interactúan los componentes del sistema para procesar una solicitud de análisis de ADN:
 
-```
+
 ```mermaid
-```
+
 sequenceDiagram
     autonumber
     actor Cliente
@@ -75,8 +75,7 @@ sequenceDiagram
     end
     deactivate Controller
     ```
-```
-``` 
+ 
 
 
 📌 Descripción del Proyecto
@@ -177,6 +176,7 @@ Carrera: Ingeniería de Sistemas
 Materia: Desarrollo de Software
 
 Año: 3er Año
+
 
 
 
